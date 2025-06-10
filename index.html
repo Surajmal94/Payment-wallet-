@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dost Wallet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .wallet-box {
+      background: #fff;
+      padding: 20px;
+      margin: auto;
+      max-width: 400px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 90%;
+      font-size: 16px;
+    }
+
+    #qr {
+      margin: 20px auto;
+      width: 200px;
+      height: 200px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wallet-box">
+    <h2>📲 Dost Wallet</h2>
+    <p><strong>Merchant UPI ID:</strong></p>
+    <p id="upiID">surajmal@upi</p>
+    <button onclick="copyUPI()">📋 Copy UPI ID</button>
+
+    <h3>🧾 Pay Using QR Code:</h3>
+    <div id="qr"></div>
+
+    <h3>💸 UPI Payment</h3>
+    <input type="text" id="payerName" placeholder="Aapka Naam" required>
+    <input type="number" id="amount" placeholder="Kitna Amount?" required>
+    <button onclick="payNow()">📤 Bhejo Payment</button>
+  </div>
+
+  <!-- QR Code Generator -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+  <script>
+    const upiID = "surajmal@upi";
+
+    // Generate QR Code
+    QRCode.toCanvas(document.getElementById('qr'), `upi://pay?pa=${upiID}&pn=Dost%20Wallet&cu=INR`, function (error) {
+      if (error) console.error(error);
+    });
+
+    // Copy UPI
+    function copyUPI() {
+      navigator.clipboard.writeText(upiID);
+      alert("UPI ID copied: " + upiID);
+    }
+
+    // UPI Deeplink Payment
+    function payNow() {
+      const name = document.getElementById("payerName").value;
+      const amount = document.getElementById("amount").value;
+
+      if (!name || !amount) {
+        alert("Naam aur amount bhariye");
+        return;
+      }
+
+      const upiLink = `upi://pay?pa=${upiID}&pn=${encodeURIComponent(name)}&am=${amount}&cu=INR`;
+      window.location.href = upiLink;
+    }
+  </script>
+
+</body>
+</html>
